@@ -1,0 +1,32 @@
+plugins {
+  id 'java'
+  id 'application'
+  id 'idea'
+  id 'eclipse'
+  id 'checkstyle'
+  id 'pmd'
+  id 'findbugs'
+  id 'maven'
+  id 'maven-publish'
+  id 'com.jfrog.artifactory' version '3.1.0'
+  id 'com.github.johnrengelman.shadow' version '1.2.2'
+}
+
+apply from: 'gradle/buildscript.gradle'
+
+group = 'org.cjwilson'
+version = '1-SNAPSHOT'
+
+//Remove comments for project dependancies.
+/*
+dependencies {
+  compile(
+    )
+  
+  testCompile(
+    
+    )
+ 
+}
+*/
+

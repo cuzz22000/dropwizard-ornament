@@ -1,0 +1,46 @@
+configuredProperty: ${DYNAMIC_PROPERTY}
+
+authenticationToken : foobar!
+
+server:
+  requestLog: 
+    appenders: 
+      - type: file 
+        currentLogFilename: /var/log/request/current
+        threshold: ALL
+        archive: true
+        archivedLogFilenamePattern: /var/log/request/arc-%d.log
+        archivedFileCount: 5
+        timeZone: UTC
+  type: default
+  maxThreads: 1024
+  applicationConnectors:
+    - type: http
+      port: 8080
+  adminConnectors:
+    - type: http
+      port: 8081
+      
+logging:
+  level: INFO
+  loggers:
+    io.dropwizard: info
+    org.eclipse.jetty: info
+  appenders:
+    - type: file
+      currentLogFilename: /var/log/app/current
+      threshold: ALL
+      archive: true
+      archivedLogFilenamePattern: /var/log/app/arc-%d.log
+      archivedFileCount: 5
+      timeZone: UTC
+    - type: console
+
+# a comma separated string of the packages that contain your @Api annotated resources  
+swagger:
+  resourcePackage: io.dropwizard.ornament.sample
+  schemes: 
+    - https
+    - http
+  showAuth: true
+    

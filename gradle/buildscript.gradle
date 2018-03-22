@@ -1,0 +1,30 @@
+
+apply from: 'gradle/check.gradle'
+apply from: 'gradle/convention.gradle'
+apply from: 'gradle/dropwizard.gradle'
+
+processResources {
+  from('src/test/resources') { include '**/*.json' }
+}
+
+test { systemProperties 'property': 'value' }
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) { from components.java }
+  }
+}
+
+shadowJar {
+  mergeServiceFiles()
+  classifier = ''
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task home << { println gradle.gradleHomeDir }
+
+defaultTasks 'clean', 'build', 'shadow'

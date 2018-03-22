@@ -1,0 +1,46 @@
+
+pmd { consoleOutput = false }
+
+pmdMain { ignoreFailures = false }
+
+pmdTest { ignoreFailures = true }
+
+tasks.withType(Pmd) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+checkstyle {
+  toolVersion = "6.4.1"
+  showViolations = false
+  configFile = file('./config/checkstyle/checkstyle.xml')
+}
+
+checkstyleMain {
+  ignoreFailures = true
+  reports {
+    include ('**/*.java')
+    xml { destination "${rootProject.buildDir}/reports/checkstyle/main.xml" }
+  }
+}
+
+checkstyleTest {
+  ignoreFailures = true
+  reports {
+    include ('**/*.java')
+    xml { destination "${rootProject.buildDir}/reports/checkstyle/test.xml" }
+  }
+}
+
+findbugsMain { ignoreFailures = true }
+
+findbugsTest { ignoreFailures = true }
+
+tasks.withType(FindBugs) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}

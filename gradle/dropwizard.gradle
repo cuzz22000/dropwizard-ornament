@@ -1,0 +1,8 @@
+
+mainClassName = 'io.dropwizard.ornament.ServiceApplication'
+
+run {
+  environment 'APPLICATION', rootProject.name
+  environment 'ENVIRONMENT', 'local'
+  args 'server', './configuration.yml'
+}
