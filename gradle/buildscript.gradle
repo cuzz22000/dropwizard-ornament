@@ -27,4 +27,4 @@ task sourcesJar(type: Jar, dependsOn:classes) {
 
 task home << { println gradle.gradleHomeDir }
 
-defaultTasks 'clean', 'build', 'shadow'
+defaultTasks 'clean', 'build', 'shadowJar'
