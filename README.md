@@ -1,10 +1,17 @@
 ## Dropwizard Ornament
 
-Provides base functionality for Dropwizard projects. Features extended onto the core functionality of Dropwizard with sample code and Swagger integration. Developers need only to clone project and start implementing application specific functionality to launch a new project.
+Provides base functionality for Dropwizard projects. Features extended onto the core functionality of Dropwizard with sample code, API Keys and Swagger integration. Developers need only to clone project and start implementing application specific functionality to launch a new project.
+
+#### Docker
+To run the demo use the following:
+
+```bash
+$> docker run -p 8080:8080 -p 8081:8081 cuzz22000/dropwizard-ornament:latest
+```
 
 #### Creating a new project
 
-The instructions below requires [hub](https://github.com/github/hub).
+The script below requires [hub](https://github.com/github/hub).
 
 ```bash
 # Provide proper substitutions elements wrapped in {....}
@@ -37,8 +44,10 @@ So that you don't merge all the updates it's recomended to use Git's [`cherry-pi
 [project-root] $ git fetch source
 [project-root] $ git cherry-pick [commit]
 ```
-Once the commit is merged the source will likely have conflicts use your favorite merge tool to resolve. 
+Once the commit is merged the source will likely have conflicts use your favorite merge tool to resolve.
 
+#### API Keys
+A simple API authenticator is included for reference. All Sample Resources are secured with the key `foobar!`
 
 
 #### Building
@@ -54,7 +63,7 @@ Sample code is provided in package
 `io.dropwizard.ornament.sample`
 
  * `SampleResource.java` - `JAXRS` and `Swagger` annotated service endpoints
- * `SamplePojo.java` - Simple pojo interacting with `SampleEnitity.java`
+ * `SampleEnitity.java` - Simple valued entity
 
 #### Logging
 Logging is split into two separate for application and request. Logs are archived once a day up to five days, logs older than five days are removed.
@@ -90,7 +99,6 @@ swagger:
 #### Resources
  * [Dropwizard](http://www.dropwizard.io/)
  * [Dropwizard Metrics](https://dropwizard.github.io/metrics/3.1.0/)
- * [dropwizard-metrics-cloudwatch](https://github.com/jdamick/dropwizard-metrics-cloudwatch)
  * [Swagger](http://swagger.io/)
  * [Dropwizard Swagger](https://github.com/federecio/dropwizard-swagger)
 
