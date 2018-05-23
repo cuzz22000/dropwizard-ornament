@@ -26,6 +26,7 @@ logging:
   loggers:
     io.dropwizard: info
     org.eclipse.jetty: info
+    org.reflections.Reflections: error
   appenders:
     - type: file
       currentLogFilename: /var/log/app/current
