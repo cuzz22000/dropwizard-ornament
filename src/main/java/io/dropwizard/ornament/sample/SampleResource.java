@@ -1,5 +1,7 @@
 package io.dropwizard.ornament.sample;
 
+import java.security.Principal;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -15,6 +17,7 @@ import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 
+import io.dropwizard.auth.Auth;
 import io.dropwizard.ornament.ServiceConfiguration;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiKeyAuthDefinition;
@@ -27,11 +30,8 @@ import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
 
 
-/**
- * @author Federico Recio, Chris Wilson
- */
 @Path("/sample")
-@Api(value = "Sample resources for configured operations")
+@Api(value = "Sample Operations *Authenticate with : \"Bearer foobar!\"")
 @Produces(MediaType.APPLICATION_JSON)
 @SwaggerDefinition(securityDefinition = @SecurityDefinition(
     apiKeyAuthDefinitions = {@ApiKeyAuthDefinition(name = "Authorization", key = "apiKey",
@@ -46,36 +46,31 @@ public class SampleResource {
 
   @GET
   @Timed
-  @ApiOperation("Sample endpoint")
-  public Response get() {
-    return Response.ok(new SampleEntity("Foo-Bar", 1234)).build();
-  }
-
-  @GET
-  @Timed
-  @ApiOperation(value = "Sample endpoint *Authenticate with : Bearer 1234a",
-      authorizations = {@Authorization("apiKey")})
-  @Path("configured")
-  public Response getconfigured() {
-    return Response.ok(new SampleEntity(configuration.configuredProperty(), 1234)).build();
+  @ExceptionMetered
+  @ApiOperation(value = "Sample Get Endpoint", authorizations = {@Authorization("apiKey")})
+  public Response get(@ApiParam(hidden = true) @Auth Principal principal) {
+    return Response.ok(new SampleEntity("White House", 2024561111)).build();
   }
 
   @GET
   @Timed
   @ExceptionMetered
-  @ApiOperation("Sample endpoint with path param")
+  @ApiOperation(value = "Sample Get Endpoint with Path Param",
+      authorizations = {@Authorization("apiKey")})
   @ApiResponses({@ApiResponse(code = 200, message = "Success")})
   @Path("/hello-with-path-param/{name}")
-  public Response getWithPathParam(@PathParam("name") String name) {
-    return Response.ok(new SampleEntity("Hello " + name, 333)).build();
+  public Response getWithPathParam(@PathParam("name") String name,
+      @ApiParam(hidden = true) @Auth Principal principal) {
+    return Response.ok(new SampleEntity("Hello " + name, 1234567)).build();
   }
 
   @GET
   @Timed
   @ExceptionMetered
-  @ApiOperation("Sample endpoint with query param")
+  @ApiOperation(value = "Sample Get with Query Param", authorizations = {@Authorization("apiKey")})
   @Path("/hello-with-query-param")
-  public Response getWithQueryParam(@QueryParam("name") Optional<String> name) {
+  public Response getWithQueryParam(@QueryParam("name") Optional<String> name,
+      @ApiParam(hidden = true) @Auth Principal principal) {
     return Response.ok(new SampleEntity("Hello " + name.get(), 444)).build();
   }
 
@@ -83,11 +78,13 @@ public class SampleResource {
   @Timed
   @ExceptionMetered
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-  @ApiOperation(value = "Get access token", notes = "Authenticate user and get a access token.",
-      response = SampleEntity.class, authorizations = {@Authorization("apiKey")})
+  @ApiOperation(value = "Sample Post Form Params",
+      notes = "Authenticate user and get a access token.", response = SampleEntity.class,
+      authorizations = {@Authorization("apiKey")})
   public SampleEntity postFormToken(
-      @FormParam("username") @ApiParam(defaultValue = "username") String username,
-      @FormParam("password") @ApiParam(defaultValue = "password") String password) {
+      @FormParam("username") @ApiParam(defaultValue = "first_name") String username,
+      @FormParam("password") @ApiParam(defaultValue = "last_name") String password,
+      @ApiParam(hidden = true) @Auth Principal principal) {
     return new SampleEntity(username, 1234);
   }
 
@@ -95,10 +92,11 @@ public class SampleResource {
   @Timed
   @ExceptionMetered
   @Consumes(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Get access token", notes = "Authenticate user and get a access token.",
+  @ApiOperation(value = "Sample Post JSON Body", notes = "Echo Sample Entity",
       response = SampleEntity.class, authorizations = {@Authorization("apiKey")})
   @Path("/json")
-  public SampleEntity postJson(SampleEntity entity) {
+  public SampleEntity postJson(final SampleEntity entity,
+      @ApiParam(hidden = true) @Auth Principal principal) {
     return new SampleEntity(entity.name(), entity.value());
   }
 

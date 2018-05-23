@@ -3,6 +3,8 @@ package io.dropwizard.ornament.sample;
 import static io.dropwizard.testing.FixtureHelpers.fixture;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.util.Optional;
 
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.glassfish.jersey.test.DeploymentContext;
@@ -15,6 +17,11 @@ import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.auth.AuthenticationException;
+import io.dropwizard.auth.Authenticator;
+import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jersey.DropwizardResourceConfig;
 import io.dropwizard.ornament.ServiceConfiguration;
@@ -37,19 +44,43 @@ public abstract class BaseSampleResourceTest extends JerseyTest {
 
     public TestResourceConfig() {
       super(true, new MetricRegistry());
+
       final ObjectMapper mapper = Jackson.newObjectMapper(new YAMLFactory());
       final String ymlConfig = fixture("fixtures/test-configuration.yml");
+
       try {
         configuration = mapper.readValue(ymlConfig, ServiceConfiguration.class);
-        register(new SampleResource(configuration));
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
+
+      register(new AuthDynamicFeature(new OAuthCredentialAuthFilter.Builder<Principal>()
+          .setAuthenticator(new TestAuthenticator()).setPrefix("Bearer").buildAuthFilter()));
+      register(new AuthValueFactoryProvider.Binder<>(Principal.class));
+      register(new SampleResource(configuration));
 
     }
 
   }
 
-  protected static ServiceConfiguration configuration;
+  public static class TestAuthenticator implements Authenticator<String, Principal> {
 
+    @Override
+    public Optional<Principal> authenticate(String credentials) throws AuthenticationException {
+      if (credentials.equals(AUTH_KEY))
+        return Optional.of(new Principal() {
+
+          @Override
+          public String getName() {
+            return "My Name is What!";
+          }
+        });
+      return Optional.empty();
+
+    }
+
+    protected static final String AUTH_KEY = "foobar";
+  }
+
+  protected static ServiceConfiguration configuration;
 }

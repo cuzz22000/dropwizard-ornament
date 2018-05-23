@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.ornament.health.ServiceHeath;
 import io.dropwizard.ornament.sample.SampleResource;
@@ -46,10 +47,11 @@ public class ServiceApplication extends Application<ServiceConfiguration> {
     // sample resource
     environment.jersey().register(new SampleResource(configuration));
     // token authenticator
-    environment.jersey().register(
-        new AuthDynamicFeature(new OAuthCredentialAuthFilter.Builder<Principal>()
+    environment.jersey()
+        .register(new AuthDynamicFeature(new OAuthCredentialAuthFilter.Builder<Principal>()
             .setAuthenticator(new TokenAuthentication(configuration.authenticationToken()))
             .setPrefix("Bearer").buildAuthFilter()));
+    environment.jersey().register(new AuthValueFactoryProvider.Binder<>(Principal.class));
 
   }
 
