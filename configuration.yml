@@ -41,7 +41,7 @@ logging:
 swagger:
   resourcePackage: io.dropwizard.ornament.sample
   schemes: 
-    - https
     - http
+    - https
   showAuth: true
     
