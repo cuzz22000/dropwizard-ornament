@@ -1,5 +1,7 @@
 ## Dropwizard Ornament
 
+![alt travis](https://travis-ci.org/cuzz22000/dropwizard-ornament.svg?branch=master)
+
 Provides base functionality for Dropwizard projects. Features extended onto the core functionality of Dropwizard with sample code, API Keys and Swagger integration. Developers need only to clone project and start implementing application specific functionality to launch a new project.
 
 #### Docker
