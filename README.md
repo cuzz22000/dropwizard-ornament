@@ -8,7 +8,7 @@ Provides base functionality for Dropwizard projects. Features extended onto the 
 To run the demo use the following:
 
 ```bash
-$> docker run -p 8080:8080 -p 8081:8081 cuzz22000/dropwizard-ornament:latest
+$> docker run -p 8080:8080 -p 8081:8081 -e ENVIRONMENT=local cuzz22000/dropwizard-ornament:latest
 ```
 
 #### Creating a new project
