@@ -9,6 +9,8 @@ import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
+import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
+import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.ornament.health.ServiceHeath;
 import io.dropwizard.ornament.sample.SampleResource;
 import io.dropwizard.setup.Bootstrap;
@@ -26,6 +28,9 @@ public class ServiceApplication extends Application<ServiceConfiguration> {
   @Override
   public void initialize(Bootstrap<ServiceConfiguration> bootstrap) {
 
+    bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(
+        bootstrap.getConfigurationSourceProvider(), new EnvironmentVariableSubstitutor()));
+
     // dropwizard-swagger
     bootstrap.addBundle(new SwaggerBundle<ServiceConfiguration>() {
       @Override
@@ -39,8 +44,7 @@ public class ServiceApplication extends Application<ServiceConfiguration> {
 
   @Override
   public void run(ServiceConfiguration configuration, Environment environment) throws Exception {
-    LOG.info("Service Name : {}", System.getenv("APPLICATION"));
-    LOG.info("Environment : {}", System.getenv("ENVIRONMENT"));
+    LOG.info("Environment : {}", configuration.environment());
     // default health check
     environment.healthChecks().register(getName() + " HealthCheck", new ServiceHeath());
     environment.jersey().register(new ServiceHeath());

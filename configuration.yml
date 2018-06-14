@@ -1,4 +1,4 @@
-configuredProperty: ${DYNAMIC_PROPERTY}
+environment: ${ENVIRONMENT}
 
 authenticationToken : foobar!
 
