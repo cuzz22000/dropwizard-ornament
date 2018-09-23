@@ -20,7 +20,7 @@ The script below requires [hub](https://github.com/github/hub).
 $ mkdir {project-name}
 $ cd {project-name}
 $ git init
-$ hub create -p {githib-user}/{project-name}
+$ hub create {githib-user}/{project-name}
 $ echo -e '##{new-project}' > README.md
 $ echo -e 'Name | Email | Mobile | Slack\n-----|-------|--------|------\n{your-name} | {email} | {cell-#} | {slack-username}' > OWNERS.md 
 $ echo -e "rootProject.name='{project-name}'" > settings.gradle
