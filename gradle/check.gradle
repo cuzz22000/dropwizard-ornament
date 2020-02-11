@@ -1,7 +1,7 @@
 
 pmd { consoleOutput = false }
 
-pmdMain { ignoreFailures = false }
+pmdMain { ignoreFailures = true }
 
 pmdTest { ignoreFailures = true }
 
@@ -22,7 +22,7 @@ checkstyleMain {
   ignoreFailures = true
   reports {
     include ('**/*.java')
-    xml { destination "${rootProject.buildDir}/reports/checkstyle/main.xml" }
+    xml { destination file("${rootProject.buildDir}/reports/checkstyle/main.xml") }
   }
 }
 
@@ -30,7 +30,7 @@ checkstyleTest {
   ignoreFailures = true
   reports {
     include ('**/*.java')
-    xml { destination "${rootProject.buildDir}/reports/checkstyle/test.xml" }
+    xml { destination file("${rootProject.buildDir}/reports/checkstyle/test.xml") }
   }
 }
 
